@@ -26,6 +26,8 @@ namespace BinarySearchTree
             Console.WriteLine();
             bt.PostOrder(bt.Root);
             Console.WriteLine();
+            bt.FindMax(bt.Root);
+            bt.FindMin(bt.Root);
 
 
         }
@@ -134,6 +136,35 @@ namespace BinarySearchTree
                     PreOrder(Root.LeftNode);
                     PreOrder(Root.RightNode);
                 }
+            }
+
+            public void FindMin (Node Root)
+            {
+                Node current = Root;
+
+                while (Root != null)
+                {
+                    current = Root;
+                    Root = Root.LeftNode;
+                }
+                Console.WriteLine("The minumum value is: " + current.Data);
+            }
+
+            public void FindMax(Node Root)
+            {
+                Node current = Root;
+
+                while(Root != null)
+                {
+                    current = Root;
+                    Root = Root.RightNode;
+                }
+                Console.WriteLine("The maximum value is: " + current.Data);
+            }
+
+            public void DeleteNode(int key, Node Root)
+            {
+
             }
 
         }
