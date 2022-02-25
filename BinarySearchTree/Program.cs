@@ -6,28 +6,34 @@ namespace BinarySearchTree
     {
         static void Main(string[] args)
         {
-            BinaryTree bt = new();
+            BinaryTree? bt = new();
 
+            bt.Add(30);
+            bt.Add(35);
+            bt.Add(57);
             bt.Add(15);
-            bt.Add(3);
-            bt.Add(7);
-            bt.Add(21);
-            bt.Add(13);
-            bt.Add(82);
-            bt.Add(42);
-            bt.Add(9);
-            bt.Add(10);
+            bt.Add(63);
+            bt.Add(49);
+            bt.Add(89);
+            bt.Add(77);
+            bt.Add(67);
+            bt.Add(98);
+            bt.Add(91);
 
-            foreach(int i in bt)
-                Console.WriteLine(i + " ");
-
+            bt.PrintInOrder(bt.Root);
             Console.WriteLine();
+            bt.PreOrder(bt.Root);
+            Console.WriteLine();
+            bt.PostOrder(bt.Root);
+            Console.WriteLine();
+
+
         }
 
         class Node
         {
-            public Node LeftNode { get; set; }
-            public Node RightNode { get; set; }
+            public Node? LeftNode { get; set; }
+            public Node? RightNode { get; set; }
             public int Data { get; set; } 
 
             public void PrintNode() => Console.Write(Data + " ");
@@ -36,7 +42,7 @@ namespace BinarySearchTree
 
         class BinaryTree
         {
-            public Node Root;
+            public Node? Root;
 
             public BinaryTree()
             {
@@ -48,7 +54,8 @@ namespace BinarySearchTree
                 //Current will be the iterator that starts at the root
                 Node current = Root;
                 //newNode is the node to be inserted once its place has been found
-                Node newNode = new(value);
+                Node newNode = new();
+                newNode.Data = value;
                 
                 //if tree is empty
                 if(Root == null)
@@ -97,6 +104,38 @@ namespace BinarySearchTree
                     }
                 }
             }
+
+            //Print in order
+            public void PrintInOrder(Node Root)
+            {
+                if(Root != null)
+                {
+                    PrintInOrder(Root.LeftNode);
+                    Console.Write(Root.Data + " ");
+                    PrintInOrder(Root.RightNode);
+                }
+            }
+
+            public void PostOrder(Node Root)
+            {
+                if(Root!=null)
+                {
+                    PostOrder(Root.LeftNode);
+                    PostOrder(Root.RightNode);
+                    Console.Write(Root.Data + " ");
+                }
+            }
+
+            public void PreOrder(Node Root)
+            {
+                if (Root != null)
+                {
+                    Console.Write(Root.Data + " ");
+                    PreOrder(Root.LeftNode);
+                    PreOrder(Root.RightNode);
+                }
+            }
+
         }
 
     }
