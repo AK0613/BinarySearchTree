@@ -7,7 +7,9 @@ namespace BinarySearchTree
         static void Main(string[] args)
         {
             BinaryTree? bt = new();
+            int x;
 
+            //Driver code: Create tree
             bt.Add(30);
             bt.Add(35);
             bt.Add(57);
@@ -20,22 +22,28 @@ namespace BinarySearchTree
             bt.Add(98);
             bt.Add(91);
 
-            bt.PrintInOrder(bt.Root);
+            //Do stuff to the tree and print it
+            bt.PrintInOrder(bt.root);
             Console.WriteLine();
-            bt.PreOrder(bt.Root);
+            bt.PreOrder(bt.root);
             Console.WriteLine();
-            bt.PostOrder(bt.Root);
+            bt.PostOrder(bt.root);
             Console.WriteLine();
-            bt.FindMax(bt.Root);
-            bt.FindMin(bt.Root);
-
+            bt.FindMax(bt.root);
+            bt.FindMin(bt.root);
+            Console.WriteLine("The height of the tree is: " + bt.GetHeight(bt.root));
+            x = 57;
+            Console.WriteLine("Deleting node: " + x);
+            bt.DeleteNode(bt.root, x);
+            bt.PrintInOrder(bt.root);
+            Console.WriteLine("The height of the tree is: " + bt.GetHeight(bt.root));
 
         }
 
         class Node
         {
-            public Node? LeftNode { get; set; }
-            public Node? RightNode { get; set; }
+            public Node? Left { get; set; }
+            public Node? Right { get; set; }
             public int Data { get; set; } 
 
             public void PrintNode() => Console.Write(Data + " ");
@@ -44,31 +52,31 @@ namespace BinarySearchTree
 
         class BinaryTree
         {
-            public Node? Root;
+            public Node? root;
 
             public BinaryTree()
             {
-                Root = null;
+                root = null;
             }
             
             public bool Add(int value)
             {
                 //Current will be the iterator that starts at the root
-                Node current = Root;
+                Node? current = root;
                 //newNode is the node to be inserted once its place has been found
-                Node newNode = new();
+                Node? newNode = new();
                 newNode.Data = value;
                 
                 //if tree is empty
-                if(Root == null)
+                if(root == null)
                 {
-                    Root = newNode;
+                    root = newNode;
                     return true;
                 }
 
                 else
                 {
-                    Node parent;
+                    Node? parent;
 
                     while(true)
                     {
@@ -77,12 +85,12 @@ namespace BinarySearchTree
                         if(current.Data > value)
                         {
                             //Move one node to the left to check it again
-                            current = current.LeftNode;
+                            current = current.Left;
                             //If that node is empty
                             if(current == null)
                             {
                                 //Add a value to it. Using parent variable since current moved one node to the left
-                                parent.LeftNode = newNode;
+                                parent.Left = newNode;
                                 return true;
                             }
                         }
@@ -90,11 +98,11 @@ namespace BinarySearchTree
                         //If the value is bigger than the current node. Move to the right until it's empty 
                         else if (current.Data < value)
                         {
-                            current = current.RightNode;
+                            current = current.Right;
 
                             if(current == null)
                             {
-                                parent.RightNode = newNode;
+                                parent.Right = newNode;
                                 return true;
                             }
                         }
@@ -108,66 +116,134 @@ namespace BinarySearchTree
             }
 
             //Print in order
-            public void PrintInOrder(Node Root)
+            public void PrintInOrder(Node root)
             {
-                if(Root != null)
+                if(root != null)
                 {
-                    PrintInOrder(Root.LeftNode);
-                    Console.Write(Root.Data + " ");
-                    PrintInOrder(Root.RightNode);
+                    PrintInOrder(root.Left);
+                    Console.Write(root.Data + " ");
+                    PrintInOrder(root.Right);
                 }
             }
 
-            public void PostOrder(Node Root)
+            public void PostOrder(Node root)
             {
-                if(Root!=null)
+                if(root!=null)
                 {
-                    PostOrder(Root.LeftNode);
-                    PostOrder(Root.RightNode);
-                    Console.Write(Root.Data + " ");
+                    PostOrder(root.Left);
+                    PostOrder(root.Right);
+                    Console.Write(root.Data + " ");
                 }
             }
 
-            public void PreOrder(Node Root)
+            public void PreOrder(Node root)
             {
-                if (Root != null)
+                if (root != null)
                 {
-                    Console.Write(Root.Data + " ");
-                    PreOrder(Root.LeftNode);
-                    PreOrder(Root.RightNode);
+                    Console.Write(root.Data + " ");
+                    PreOrder(root.Left);
+                    PreOrder(root.Right);
                 }
             }
 
-            public void FindMin (Node Root)
+            public int FindMin (Node root)
             {
-                Node current = Root;
+                Node current = root;
 
-                while (Root != null)
+                while (root != null)
                 {
-                    current = Root;
-                    Root = Root.LeftNode;
+                    current = root;
+                    root = root.Left;
                 }
                 Console.WriteLine("The minumum value is: " + current.Data);
+                return current.Data;
             }
 
-            public void FindMax(Node Root)
+            public int FindMax(Node root)
             {
-                Node current = Root;
+                Node current = root;
 
-                while(Root != null)
+                while(root != null)
                 {
-                    current = Root;
-                    Root = Root.RightNode;
+                    current = root;
+                    root = root.Right;
                 }
                 Console.WriteLine("The maximum value is: " + current.Data);
+                return current.Data;
             }
 
-            public void DeleteNode(int key, Node Root)
+            public Node DeleteNode(Node? root, int key)
             {
+                //If the given node is null return
+                if (root == null)
+                {
+                    Console.WriteLine("The tree is empty.");
+                    return root;
+                }
+                if (root.Data > key)
+                {
+                    root.Left = DeleteNode(root.Left, key);
+                    return root;
+                }
+                else if (root.Data < key)
+                {
+                    root.Right = DeleteNode(root.Right, key);
+                    return root;
+                }
 
+                //Reach here when the root is the node to be deleted
+                //If one of the children are empty
+                if(root.Left == null)
+                {
+                    Node? temp = root.Right;
+                    return temp;
+                }
+
+                else if (root.Right == null)
+                {
+                    Node? temp = root.Left;
+                    return temp;
+                }
+
+                //Else if both children exist
+                else
+                {
+                    Node? succParent = root;
+
+                    //Find successor
+                    Node? succ = root.Right;
+
+                    while (succ.Left != null)
+                    {
+                        succParent = succ;
+                        succ = succ.Left;
+                    }
+
+                    // Delete successor. Since successor
+                    // is always left child of its parent
+                    // we can safely make successor's right
+                    // right child as left of its parent.
+                    // If there is no succ, then assign
+                    // succ->right to succParent->right
+
+                    if (succParent != root)
+                        succParent.Left = succ.Right;
+                    else
+                        succParent.Right = succ.Right;
+
+                    //Copy successor Data to root
+                    root.Data = succ.Data;
+
+                    return root;
+                }
             }
-
+            public int GetHeight(Node root)
+            {
+                if (root == null)
+                    return -1;
+                else
+                    return 1 + Math.Max(GetHeight(root.Left), GetHeight(root.Right));
+            }
         }
-
     }
 }
