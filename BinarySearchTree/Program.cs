@@ -59,7 +59,7 @@ namespace BinarySearchTree
                 root = null;
             }
             
-            public void Add(int value)
+            public bool Add(int value)
             {
                 //Current will be the iterator that starts at the root
                 Node? current = root;
